@@ -23,14 +23,19 @@ export class SongController {
   }
 
   @Get("top")
-  async findTop(@Query("limit") limit:number=10) {
+  async findTop(@Query("limit") limit:number) {
     const songs=await this.songService.findAll();
     if(!limit){
-      limit=2;
+      limit=10;
     }
     songs.sort((a,b)=>b.rating-a.rating);
-    songs.slice(0,limit);
-    return songs;
+    const tops=songs.slice(0,limit);
+    return tops;
+  }
+
+  @Get("topArtist")
+  async findTopArtists(){
+    return await this.songService.topArtist(); 
   }
 
   @Post()

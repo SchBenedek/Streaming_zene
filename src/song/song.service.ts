@@ -3,6 +3,7 @@ import { CreateSongDto } from './dto/create-song.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
 import { PrismaService } from 'src/prisma.service';
 import * as mysql from "mysql2/promise";
+import { count } from 'console';
 
 @Injectable()
 export class SongService {
@@ -29,6 +30,15 @@ export class SongService {
         id:id
       }
     });
+  }
+
+  async topArtist(){
+    return await this.db.song.groupBy({
+      by: ["author"],
+      _count:{
+        title:true
+      },
+    })
   }
 
   async update(id: number, updateSongDto: UpdateSongDto) {
