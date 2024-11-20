@@ -19,5 +19,5 @@ model Song{
   author String
   length Int
   price Int
-  rating Int
+  rating Float @default(3)
 }

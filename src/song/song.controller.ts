@@ -9,20 +9,10 @@ export class SongController {
 
   @Get("free")
   async findFree() {
-    const songs=await this.songService.findAll();
-    const freeSongs=[];
-    songs.forEach(s=>{
-      if(s.price==0){
-        freeSongs.push(s);
-      }
-      else{
-        undefined;
-      }
-    })
-    return freeSongs;
+    return await this.songService.findFree();
   }
 
-  @Get("top")
+  /*@Get("top")
   async findTop(@Query("limit") limit:number) {
     const songs=await this.songService.findAll();
     if(!limit){
@@ -31,11 +21,16 @@ export class SongController {
     songs.sort((a,b)=>b.rating-a.rating);
     const tops=songs.slice(0,limit);
     return tops;
+  }*/
+
+  @Get("top")
+  findTop(@Query("limit") limit:string='10') {
+    return this.songService.topArtist(+limit);
   }
 
-  @Get("topArtist")
-  async findTopArtists(){
-    return await this.songService.topArtist(); 
+  @Get("popularArtists")
+  popularArtists(){
+    return this.songService.popularArtists();
   }
 
   @Post()
@@ -48,7 +43,7 @@ export class SongController {
     return await this.songService.findAll();
   }
 
-  @Get(':id')
+  @Get(':id(\\d+)')
   async findOne(@Param('id') id: string) {
     const song = await this.songService.findOne(+id);
     if(!song){
@@ -60,7 +55,7 @@ export class SongController {
   }
 
 
-  @Patch(':id')
+  @Patch(':id(\\d+)')
   async update(@Param('id') id: string, @Body() updateSongDto: UpdateSongDto) {
     return await this.songService.update(+id, updateSongDto);
   }

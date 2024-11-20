@@ -24,6 +24,14 @@ export class SongService {
     return await this.db.song.findMany();
   }
 
+  async findFree(){
+    return await this.db.song.findMany({
+      where:{
+        price:0
+      }
+    })
+  }
+
   async findOne(id: number) {
     return await this.db.song.findUnique({
       where:{
@@ -32,12 +40,26 @@ export class SongService {
     });
   }
 
-  async topArtist(){
-    return await this.db.song.groupBy({
-      by: ["author"],
-      _count:{
-        title:true
+  topArtist(limit:number){
+    return this.db.song.findMany({
+      orderBy:{
+        rating:"desc"
       },
+      take:limit
+    })
+  }
+
+  popularArtists(){
+    return this.db.song.groupBy({
+      by: ['author'],
+      _count: {
+        author: true
+      },
+      orderBy:{
+        _count:{
+          author:"desc"
+        }
+      }
     })
   }
 
